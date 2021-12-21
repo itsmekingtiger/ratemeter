@@ -12,7 +12,7 @@ type CircularQueue struct {
 func NewCircularQueue(size int) CircularQueue {
 	return CircularQueue{
 		quque: make([]int, size),
-		size:  size - 1,
+		size:  size,
 	}
 }
 
@@ -41,7 +41,7 @@ func (q CircularQueue) IsEmpty() bool {
 // 만약 head가 size보다 크면 head를 처음 위치로 이동한다.
 // 만약 head가 tail과 같으면 tail을 다음 위치로 이동한다.
 func (q *CircularQueue) moveHead() {
-	if q.head == q.size {
+	if q.head == q.maxIndex() {
 		q.head = 0
 	} else {
 		q.head++
@@ -55,9 +55,13 @@ func (q *CircularQueue) moveHead() {
 // moveTail는 tail을 다음 위치로 이동하고
 // 만약 tail이 size보다 크면 tail을 처음 위치로 이동한다.
 func (q *CircularQueue) moveTail() {
-	if q.tail == q.size {
+	if q.tail == q.maxIndex() {
 		q.tail = 0
 	} else {
 		q.tail++
 	}
+}
+
+func (q CircularQueue) maxIndex() int {
+	return q.size - 1
 }

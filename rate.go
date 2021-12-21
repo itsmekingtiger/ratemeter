@@ -4,9 +4,9 @@ import (
 	"time"
 )
 
+// Rater는 TimeFrame 주기로 ticker를 circularQueue에 저장한다.
 type Rater struct {
 	TimeFrame     time.Duration
-	NumberOfFrame int
 	circularQueue CircularQueue
 	ticker        int
 	dispose       bool
@@ -18,7 +18,6 @@ type Rater struct {
 func NewRater(timeFrame time.Duration, numberOfFrame int) *Rater {
 	r := &Rater{
 		TimeFrame:     timeFrame,
-		NumberOfFrame: numberOfFrame,
 		circularQueue: NewCircularQueue(numberOfFrame),
 	}
 
@@ -49,6 +48,10 @@ func (r *Rater) Sum() int {
 
 func (r *Rater) Dispose() {
 	r.dispose = true
+}
+
+func (r Rater) Size() int {
+	return r.circularQueue.size
 }
 
 func (r *Rater) tick() {
