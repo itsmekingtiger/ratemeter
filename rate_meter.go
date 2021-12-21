@@ -13,6 +13,7 @@ import (
 type RateMeter struct {
 	TimeFrame     time.Duration
 	circularQueue CircularQueue
+	flushHook     func(int)
 	ticker        int
 	dispose       bool
 }
@@ -64,7 +65,14 @@ func (r *RateMeter) Clear() {
 	r.circularQueue = NewCircularQueue(r.circularQueue.size)
 }
 
+func (r *RateMeter) SetFlushHook(hook func(ticker int)) {
+	r.flushHook = hook
+}
+
 func (r *RateMeter) flushTicker() {
+	if r.flushHook != nil {
+		r.flushHook(r.ticker)
+	}
 	r.circularQueue.Push(r.ticker)
 	r.ticker = 0
 }
