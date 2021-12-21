@@ -1,4 +1,4 @@
-package gorate
+package ratemeter
 
 import "errors"
 

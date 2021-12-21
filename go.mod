@@ -1,3 +1,3 @@
-module go-rate
+module ratemeter
 
 go 1.17
