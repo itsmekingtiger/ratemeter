@@ -71,7 +71,7 @@ func (r *RateMeter) SetFlushHookBefore(hook func(ticker int)) {
 }
 
 func (r *RateMeter) SetFlushHookAfter(hook func(ticker int)) {
-	r.flushHookBefore = hook
+	r.flushHookAfter = hook
 }
 
 func (r *RateMeter) flushTicker() {
