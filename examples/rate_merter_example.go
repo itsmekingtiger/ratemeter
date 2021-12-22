@@ -8,17 +8,17 @@ import (
 )
 
 func main() {
-	m := ratemeter.NewRateMeter(time.Second, 60)
-	m.SetFlushHook(func(ticker int) {
-		fmt.Printf("단위시간동안 %d번의 이벤트 발생\n", ticker)
-		fmt.Printf("최근 1분간 이벤트 발생 횟수: %d\n", m.Sum())
+	m := ratemeter.NewRateMeter(time.Second, 10)
+	m.SetFlushHookBefore(func(ticker int) {
+		fmt.Println(m.CircularQueue)
 	})
 
 	rng := rand.New(rand.NewSource(time.Now().Unix()))
 	for {
-		m.Incr()
-		sleep := rng.Intn(1000) + 1
-		fmt.Printf("sleep: %d\n", sleep)
-		time.Sleep(time.Millisecond * time.Duration(sleep))
+		count := rng.Intn(100)
+		for i := 0; i < count; i++ {
+			m.Incr()
+		}
+		time.Sleep(time.Second)
 	}
 }
