@@ -11,11 +11,11 @@ import (
 // 이 구현은 Thread-safe하지 않으며, 대략의 추세를 측정하기 위해 사용한다.
 //
 type RateMeter struct {
-	TimeFrame     time.Duration
-	circularQueue CircularQueue
-	flushHook     func(int)
-	ticker        int
-	dispose       bool
+	TimeFrame time.Duration
+	CircularQueue
+	flushHook func(int)
+	ticker    int
+	dispose   bool
 }
 
 // NewRateMeter는 주어진 타임프레임과 숫자 프레임을 가지는 RateMeter를 생성한다.
@@ -24,7 +24,7 @@ type RateMeter struct {
 func NewRateMeter(timeFrame time.Duration, numberOfFrame int) *RateMeter {
 	r := &RateMeter{
 		TimeFrame:     timeFrame,
-		circularQueue: NewCircularQueue(numberOfFrame),
+		CircularQueue: NewCircularQueue(numberOfFrame),
 	}
 
 	go func() {
@@ -46,7 +46,7 @@ func (r *RateMeter) Incr() {
 
 func (r *RateMeter) Sum() int {
 	sum := r.ticker
-	for _, v := range r.circularQueue.quque {
+	for _, v := range r.CircularQueue.quque {
 		sum += v
 	}
 	return sum
@@ -57,12 +57,12 @@ func (r *RateMeter) Dispose() {
 }
 
 func (r RateMeter) Size() int {
-	return r.circularQueue.size
+	return r.CircularQueue.size
 }
 
 func (r *RateMeter) Clear() {
 	r.ticker = 0
-	r.circularQueue = NewCircularQueue(r.circularQueue.size)
+	r.CircularQueue = NewCircularQueue(r.CircularQueue.size)
 }
 
 func (r *RateMeter) SetFlushHook(hook func(ticker int)) {
@@ -73,6 +73,6 @@ func (r *RateMeter) flushTicker() {
 	if r.flushHook != nil {
 		r.flushHook(r.ticker)
 	}
-	r.circularQueue.Push(r.ticker)
+	r.CircularQueue.Push(r.ticker)
 	r.ticker = 0
 }
