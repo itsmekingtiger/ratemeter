@@ -13,9 +13,10 @@ import (
 type RateMeter struct {
 	TimeFrame time.Duration
 	CircularQueue
-	flushHook func(int)
-	ticker    int
-	dispose   bool
+	flushHookBefore func(int)
+	flushHookAfter  func(int)
+	ticker          int
+	dispose         bool
 }
 
 // NewRateMeter는 주어진 타임프레임과 숫자 프레임을 가지는 RateMeter를 생성한다.
@@ -65,14 +66,21 @@ func (r *RateMeter) Clear() {
 	r.CircularQueue = NewCircularQueue(r.CircularQueue.size)
 }
 
-func (r *RateMeter) SetFlushHook(hook func(ticker int)) {
-	r.flushHook = hook
+func (r *RateMeter) SetFlushHookBefore(hook func(ticker int)) {
+	r.flushHookBefore = hook
+}
+
+func (r *RateMeter) SetFlushHookAfter(hook func(ticker int)) {
+	r.flushHookBefore = hook
 }
 
 func (r *RateMeter) flushTicker() {
-	if r.flushHook != nil {
-		r.flushHook(r.ticker)
+	if r.flushHookBefore != nil {
+		r.flushHookBefore(r.ticker)
 	}
 	r.CircularQueue.Push(r.ticker)
 	r.ticker = 0
+	if r.flushHookAfter != nil {
+		r.flushHookAfter(r.ticker)
+	}
 }
