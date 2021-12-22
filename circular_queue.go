@@ -37,6 +37,13 @@ func (q CircularQueue) IsEmpty() bool {
 	return q.head == q.tail
 }
 
+// 큐의 복사본을 반환한다.
+func (q CircularQueue) Queue() []int {
+	dump := make([]int, q.size)
+	copy(dump, q.quque)
+	return dump
+}
+
 // moveHead는 head를 다음 위치로 이동하고
 // 만약 head가 size보다 크면 head를 처음 위치로 이동한다.
 // 만약 head가 tail과 같으면 tail을 다음 위치로 이동한다.
