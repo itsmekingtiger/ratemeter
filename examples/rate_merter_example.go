@@ -3,8 +3,9 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"ratemeter"
 	"time"
+
+	"github.com/itsmekingtiger/ratemeter"
 )
 
 func main() {
